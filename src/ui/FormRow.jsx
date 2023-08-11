@@ -1,9 +1,10 @@
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 
 const StyledFormRow = styled.div`
   display: grid;
   align-items: center;
-  grid-template-columns: 24rem 1fr 1.2fr;
+  grid-template-columns: ${(props) =>
+    props.type === "horizontal" ? css`24rem 1fr 1.2fr` : `1fr`};
   gap: 2.4rem;
 
   padding: 1.2rem 0;
@@ -36,9 +37,9 @@ const Error = styled.span`
   color: var(--color-red-700);
 `;
 
-function FormRow({ label, error, children }) {
+function FormRow({ label, error, children, type = "horizontal" }) {
   return (
-    <StyledFormRow>
+    <StyledFormRow type={type}>
       {label && <Label htmlFor={children.props.id}>{label}</Label>}
       {children}
       {error && <Error>{error}</Error>}
