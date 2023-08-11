@@ -36,13 +36,21 @@ function CreateCabinForm({ onCancel, cabinToEdit = {} }) {
     const image = typeof data.image === "string" ? data.image : data.image[0];
 
     if (isEditSession)
-      editCabin({ newCabinData: { ...data, image }, id: editId });
+      editCabin(
+        { newCabinData: { ...data, image }, id: editId },
+        {
+          onSuccess: () => {
+            onCancel();
+          },
+        }
+      );
     else
       createCabin(
         { ...data, image: data.image[0] },
         {
           onSuccess: () => {
             reset();
+            onCancel();
           },
         }
       );
@@ -53,7 +61,10 @@ function CreateCabinForm({ onCancel, cabinToEdit = {} }) {
   }
 
   return (
-    <Form onSubmit={handleSubmit(onSubmit, onError)}>
+    <Form
+      onSubmit={handleSubmit(onSubmit, onError)}
+      type={onCancel ? "modal" : "regular"}
+    >
       <FormRow label="name" error={errors?.name?.message}>
         <Input
           type="text"
@@ -64,10 +75,7 @@ function CreateCabinForm({ onCancel, cabinToEdit = {} }) {
         />
       </FormRow>
 
-      <FormRow
-        label="Maximum capacity"
-        error={errors?.maximumCapacity?.message}
-      >
+      <FormRow label="Maximum capacity" error={errors?.maxCapacity?.message}>
         <Input
           type="number"
           id="maxCapacity"
